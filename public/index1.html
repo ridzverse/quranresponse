@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ayat Alquran AI</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .input-group {
+      margin-bottom: 20px;
+    }
+    .input-group label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    .input-group select {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+    }
+    .result {
+      margin-top: 20px;
+      padding: 20px;
+      border: 1px solid #ddd;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Ayat Alquran AI</h1>
+    <div class="input-group">
+      <label for="emotion">Pilih suasana hati:</label>
+      <select id="emotion">
+        <option value="sedih">Sedih</option>
+        <option value="marah">Marah</option>
+        <option value="kesepian">Kesepian</option>
+        <option value="cemas">Cemas</option>
+      </select>
+      <button onclick="getAyat()">Dapatkan Ayat</button>
+    </div>
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    async function getAyat() {
+      const emotion = document.getElementById('emotion').value;
+      const response = await fetch(`/generate?emotion=${emotion}`);
+      const data = await response.json();
+      document.getElementById('result').textContent = data.ayat;
+    }
+  </script>
+</body>
+</html>

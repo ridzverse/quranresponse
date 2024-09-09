@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alquran Response</title>
+  <style>
+    @font-face {
+      font-family: 'CustomFont';
+      src: url('fonts/font.ttf') format('truetype');
+    }
+
+    body {
+      font-family: 'CustomFont', Arial, sans-serif;
+      background-color: #040207;
+      color: #e0e0e0;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 5px;
+      color: #e0e0e0;
+    }
+
+    .input-group select {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      color: #000;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .input-group button {
+      padding: 10px 20px;
+      font-size: 16px;
+      color: #fff;
+      background-color: #007bff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .input-group button:hover {
+      background-color: #0056b3;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 20px;
+      border: 1px solid #444;
+      background-color: #1e1e1e;
+      border-radius: 4px;
+    }
+
+    .loader {
+      display: none;
+      text-align: center;
+    }
+
+    .loader img {
+      width: auto;
+      height: auto;
+      max-width: 100%;
+      max-height: 100%;
+    }
+
+    .credits {
+      margin-top: 20px;
+      text-align: center;
+      color: #e5ff00;
+    }
+
+    .credits a {
+      color: #e5ff00;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .credits a:hover {
+      text-decoration: underline;
+    }
+
+    .disclaimer {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 14px;
+      color: #b0b0b0;
+    }
+
+    strong {
+      font-weight: bold;
+      color: rgb(208, 255, 0); /* Warna merah */
+    }
+
+    .beta {
+      font-size: 14px;
+      color: #b0b0b0;
+      font-weight: normal;
+      margin-left: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Quran Verse Response <span class="beta">Beta</span></h1>
+    <div class="input-group">
+      <label for="emotion">Pilih suasana hati:</label>
+      <select id="emotion">
+        <option value="sedih">Sedih</option>
+        <option value="marah">Marah</option>
+        <option value="kesepian">Kesepian</option>
+        <option value="cemas">Cemas</option>
+      </select>
+      <button onclick="getAyat()">Dapatkan Response</button>
+    </div>
+    <div class="loader">
+      <img src="loading.gif" alt="Loading..." />
+    </div>
+    <div class="result" id="result"></div>
+    <div class="credits">
+      Dibuat oleh: <a href="https://www.instagram.com/ridzwanirawan" target="_blank" rel="noopener noreferrer">@ridzwanirawan</a><br>
+      <a href="https://saweria.co/ridzwanirawandonate" target="_blank" rel="noopener noreferrer">Donate</a>
+    </div>
+    <div class="disclaimer">
+      Disclaimer: Respon yang diberikan berusaha serelevan dan seakurat mungkin berdasarkan data dari Alquran, namun jika ada kesalahan, itu semata-mata karena kesalahan sistem.
+    </div>
+  </div>
+
+  <script>
+    async function getAyat() {
+      // Tampilkan loader
+      document.querySelector('.loader').style.display = 'block';
+      document.getElementById('result').innerHTML = '';
+
+      const emotion = document.getElementById('emotion').value;
+      try {
+        const response = await fetch(`/generate?emotion=${emotion}`);
+        const data = await response.json();
+
+        // Memproses teks output untuk bold dan warna merah
+        const processedText = processText(data.ayat);
+        document.getElementById('result').innerHTML = processedText;
+      } catch (error) {
+        document.getElementById('result').textContent = 'Error fetching ayat. ini terjadi karena keterbatasan server';
+      } finally {
+        // Sembunyikan loader
+        document.querySelector('.loader').style.display = 'none';
+      }
+    }
+
+    // Fungsi untuk menggantikan teks yang diapit '**' dengan <strong>
+    function processText(text) {
+      // Mengganti **teks** dengan <strong>teks</strong>
+      return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    }
+  </script>
+</body>
+</html>
